@@ -20,7 +20,7 @@ if nargs>1:
 if nargs>2:
     port=int(sys.argv[2])
 
-s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+s=socket.socket(socket.AF_INET6,socket.SOCK_STREAM)
 s.connect((host,port))
 s.send('Hello, world')
 data=s.recv(size)
