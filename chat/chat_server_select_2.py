@@ -12,7 +12,7 @@ if len(sys.argv)>1:
 backlog=5
 size=1024
 
-server=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server=socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR,1)
 server.bind((host,port))
 print 'chat_server listening on port %s, to exit type return'% port
