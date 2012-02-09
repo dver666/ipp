@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>QUIZ</title>
+<link rel="stylesheet" type="text/css" href="quiz.css" />
+<link rel="icon" type="image/png" href="tml.png" /></head>
+<body bgcolor="#d8da3d">
+<div id="content">
+<p>Multiple-Choice Test. When the user presses submit the program should read users responses to the questions and display a page showing users score. You can hardcode questions and correct answers inside your program or read them from an external file</p>
+<form action="quiz.cgi" method="POST" enctype="application/x-www-form-urlencoded" accept-charset="utf-8" accept="text/html" name="quiz">
+<p>1.  HTTP/1.1 introduces OPTIONS method<br />
+<input type="radio" name="q1" value="a" />(a) It is a way for a server to learn about the capabilities of a client by requesting the resource.<br />
+<input type="radio" name="q1" value="b" />(b) It is a way for a client to learn about the capabilities of a server by requesting a resource.<br />
+<input type="radio" name="q1" value="c" />(c) It is a way for a client to learn about the capabilities of a server without actually requesting the resource.<br />
+<input type="radio" name="q1" value="d" />(d) Only proxy servers use it</p>
+<p>2.  What are benefits of HTTP caching?<br />
+<input type="checkbox" name="q2" value="a" />(a) Caching improves user-perceived latency by eliminating network communication with the origin server.<br />
+<input type="checkbox" name="q2" value="b" />(b) Caching reduces bandwidth consumption by avoiding the transmission of unnecessary network packets.<br />
+<input type="checkbox" name="q2" value="c" />(c) Reduced bandwidth consumption indirectly reduces latency for uncached interactions by reducing network congestion.<br />
+<input type="checkbox" name="q2" value="d" />(d) Caching can reduce load on origin servers and on intermediate proxies, further improving latency.<br />
+<input type="checkbox" name="q2" value="e" />(e) Cache response might be different from what would be returned by direct communication with the origin server.</p>
+<p>3.  What can happen if an IP implementation decrements the incoming TTL and then tests for equal to 0?<br />
+<input type="radio" name="q3" value="a" />(a) Router should never receive a datagram with a TTL of 0.<br />
+<input type="radio" name="q3" value="b" />(b) The datagram will be dropped by packet filter as it attempts to enter forwarding plane.<br />
+<input type="radio" name="q3" value="c" />(c) Doing decrement and then test would set the TTL to 255 and let the datagram continue.</p>
+<p>4.  How does traceroute calculate the RTT?<br />
+<input type="checkbox" name="q4" value="a" />(a) Traceroute stores 12 bytes of data in the data portion of the UDP datagram, part of which is the time the datagram was sent.<br />
+<input type="checkbox" name="q4" value="b" />(b) ICMP returns only first 8 bytes of the IP datagram that was in error. This 8 byte UDP header.<br />
+<input type="checkbox" name="q4" value="c" />(c) The time value stored by traceroute is not returned in the ICMP error message.<br />
+<input type="checkbox" name="q4" value="d" />(d) Traceroute saves the time when it sends the packet, and when ICMP reply is received, it fetches the current time and subtracts the two value to get the RTT.</p>
+<input type="submit" name="cgquiz" value="Submit" /><br /><input type="reset" name="cgrst" value="Reset" /></form></div><!--#include virtual="footstmp.html"--></body></html>
