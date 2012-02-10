@@ -1,95 +1,39 @@
 import os
 import socket
 import sys
-
-defaults=['127.0.0.1','8080']
-
+import datetime
+defaults=['','8080']
 mime_types={'.jpg':'image/jpg',\
             '.gif':'image/gif',\
             '.png':'image/png',\
             '.html':'text/html',\
-            '.pdf':'application/pdf',}   
-
+            '.pdf':'application/pdf'}
 response={}
-
-responses={100: ('Continue', 'Request received, please continue'),\
-           101: ('Switching Protocols','Switching to new protocol; obey Upgrade header'),\
-           200: ('OK', 'Request fulfilled, document follows'),\
-           201: ('Created', 'Document created, URL follows'),\
-           202: ('Accepted','Request accepted, processing continues off-line'),\
-           203: ('Non-Authoritative Information', 'Request fulfilled from cache'),\
-           204: ('No Content', 'Request fulfilled, nothing follows'),\
-           205: ('Reset Content', 'Clear input form for further input.'),\
-           206: ('Partial Content', 'Partial content follows.'),\
-           300: ('Multiple Choices','Object has several resources -- see URI list'),\
-           301: ('Moved Permanently', 'Object moved permanently -- see URI list'),\
-           302: ('Found', 'Object moved temporarily -- see URI list'),\
-           303: ('See Other', 'Object moved -- see Method and URL list'),\
-           304: ('Not Modified','Document has not changed since given time'),\
-           305: ('Use Proxy','You must use proxy specified in Location to access this ... resource.'),\
-           307: ('Temporary Redirect','Object moved temporarily -- see URI list'),\
-           400: ('Bad Request','Bad request syntax or unsupported method'),\
-           401: ('Unauthorized','No permission -- see authorization schemes'),\
-           402: ('Payment Required','No payment -- see charging schemes'),\
-           403: ('Forbidden','Request forbidden -- authorization will not help'),\
-           404: ('Not Found', 'Nothing matches the given URI'),\
-           405: ('Method Not Allowed','Specified method is invalid for this server.'),\
-           406: ('Not Acceptable', 'URI not available in preferred format.'),\
-           407: ('Proxy Authentication Required', 'You must authenticate with ... this proxy before proceeding.'),\
-           408: ('Request Timeout', 'Request timed out; try again later.'),\
-           409: ('Conflict', 'Request conflict.'),\
-           410: ('Gone','URI no longer exists and has been permanently removed.'),\
-           411: ('Length Required', 'Client must specify Content-Length.'),\
-           412: ('Precondition Failed', 'Precondition in headers is false.'),\
-           413: ('Request Entity Too Large', 'Entity is too large.'),\
-           414: ('Request-URI Too Long', 'URI is too long.'),\
-           415: ('Unsupported Media Type', 'Entity body in unsupported format.'),\
-           416: ('Requested Range Not Satisfiable','Cannot satisfy request range.'),\
-           417: ('Expectation Failed','Expect condition could not be satisfied.'),\
-           500: ('Internal Server Error', 'Server got itself in trouble'),\
-           501: ('Not Implemented','Server does not support this operation'),\
-           502: ('Bad Gateway', 'Invalid responses from another server/proxy.'),\
-           503: ('Service Unavailable','The server cannot process the request due to a high load'),\
-           504: ('Gateway Timeout','The gateway server did not receive a timely response'),\
-           505: ('HTTP Version Not Supported', 'Cannot fulfill request.'),
-}
-
-response[200]="""HTTP/1.1 200 Okay
-Server: localhost
+response[200]="""HTTP/1.1 200 OK
+Server: webserver
 Content-type: %s
 
 %s
 """
-
 response[301]="""HTTP/1.1 301 Moved
-Server: localhost
+Server: webserver
 Content-type: text/plain
 Location: %s
 
 moved
 """
-
-response[401]="""HTTP/1.1 401 Unauthorized
-Server: localhost
-Content-type: text/plain
- 
-%s No permission -- see authorization schemes
-"""
-
 response[404]="""HTTP/1.1 404 Not Found
-Server: localhost
+Server: webserver
 Content-type: text/plain
 
-%s Not found
+%s Nothing matches the given URI
 """
-
-response[407]="""HTTP/1.1 407 Proxy Authentication Required
-Server: localhost
+response[501]="""HTTP/1.1 501 Not Implemented
+Server: webserver
 Content-type: text/plain
- 
-%s You must authenticate with ... this proxy before proceeding
-"""
 
+%s Server does not support this operation
+"""
 DIRECTORY_LISTING="""<html>
 <head><title>%s</title></head>
 <body>
@@ -98,13 +42,12 @@ DIRECTORY_LISTING="""<html>
 </body>
 </html>
 """
-
 DIRECTORY_LINE='<a href="%s">%s</a><br>'
-
 def server_socket(host,port):
     s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
     s.bind((host,port))
-    s.listen(5)
+    s.listen(1)
     return s
 
 def listen(s):
@@ -114,11 +57,8 @@ def listen(s):
 def get_request(stream):
     method=None
     while True:
-        try:
-            line=stream.readline()
-            print line
-        except IOError,e:
-            print e
+        line=stream.readline()
+        print line
         if not line.strip(): 
             break
         elif not method: 
@@ -132,7 +72,7 @@ def list_directory(uri):
 
 def get_file(path):
     f=open(path)
-    try: 
+    try:
         return f.read()
     except IOError,e:
         print e
@@ -148,8 +88,12 @@ def get_content(uri):
             return(200,'text/plain','localhost: %s'%datetime.datetime.now())
         if os.path.isfile(path):
             if path.endswith('.py'):
-                output=os.popen('python '+path).read()
-                return(200,'text/plain',output)
+                try:
+                    output=os.popen('python '+path).read()
+                    return(200,'text/plain',output)
+                except IOError,e:
+                    print e
+                    sys.exit(1)
 
             return (200,get_mime(uri),get_file(path))
         if os.path.isdir(path):
@@ -159,6 +103,10 @@ def get_content(uri):
                 return (301,uri+'/')
         else:
             return (404,uri)
+    except NameError,e:
+        f=str(e)
+        print 'Missing module name:',f.split()[2]
+        return (501,e)  
     except IOError,e:
         return (404,e)
 
@@ -179,6 +127,5 @@ if __name__ == '__main__':
             send_response(stream,get_content(get_request(stream)))
             stream.close()
     except KeyboardInterrupt:
-        print 'shutting down...'
+        print 'Received keyboard interrupt! Shutting down the server...'
     server.close()
-    #server serve
