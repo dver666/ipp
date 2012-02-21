@@ -37,19 +37,22 @@ def get_img(url):
 import socket
 timeout=10
 socket.setdefaulttimeout(timeout)
-url3='http://diver-laptop.local:8080/server-status'
+url3='http://localhost:8080/server-status'
 username='proxy'
 password='test123'
 realm='Proxy Test'
+
+passman=urllib2.HTTPPasswordMgr()
+passman.add_password(realm,url3,username,password)
+authhandler=urllib2.HTTPDigestAuthHandler(passman)
+
 try:
-    passman=urllib2.HTTPPasswordMgr()
-    passman.add_password(realm,url3,username,password)
-    authhandler=urllib2.HTTPDigestAuthHandler(passman)
-    proxy_support=urllib2.ProxyHandler({"http":"http://diver-laptop:8080"})
-    opener=urllib2.build_opener(proxy_support,authhandler)
-    urllib2.install_opener(opener)
-except IOError,e:
-    print e
+    proxy_support=urllib2.ProxyHandler({"http":"http://localhost:8080"})
+except URLError,e:
+    print 'error: ',e
+
+opener=urllib2.build_opener(proxy_support,authhandler)
+urllib2.install_opener(opener)
 
 req=Request(url3)
 try:
