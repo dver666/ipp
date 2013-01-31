@@ -1,0 +1,7 @@
+This should be sufficient to create pretty good fingerprint reader gui
+as well as map a few upcoming projects such as converting existing code
+to gtk3 code. The tutorial itself implements deprecation warning system and 
+lazy name spaces so the code I have here had been caught by deprecation 
+warning and had been rewritten or in the process of being rewritten using
+recommended widget.
+
