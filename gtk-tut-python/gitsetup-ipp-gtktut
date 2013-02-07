@@ -1,0 +1,35 @@
+#!/bin/bash
+# ~/ipp/gtk-tut-python
+# mkdir ~/ipp/gtk-tut-python
+cat << EOF | tee ~/ipp/gtk-tut-python/README >/dev/null
+This should be sufficient to create rock solid fingerprint reader GUI
+as well as to map a few upcoming projects as I bling along.
+Since I am going top down starting with chapter 1,
+the files contain mainly the tutorial code caught by deprecation warning 
+system which had been rewritten or is in the process of being rewritten using
+recommended widget.
+
+EOF
+
+cd ~/ipp/gtk-tut-python
+#git add README
+#git add bluezchat.glade
+#git add bluezchat.py
+#git add chaincolorselector.py
+#git add magick_jpeg2png.py
+#git add progressbar.py
+#git add pygtksourceview-widget.py
+#git add rangewidgets.py
+#git add tinygecko.py
+#git add togglebutton.py
+#git add tooltip.py
+#git add wheelbarrow.py
+git add browser.py
+git add gnome-menus-ls.py
+git add inspector.py
+git add notebook.py
+git add toolbar.py
+git add viewXPM.py
+git add gitsetup-ipp-gtktut
+git commit -a -m 'add python gtk tutorial directory and contents'
+git push
